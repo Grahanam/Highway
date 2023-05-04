@@ -2,8 +2,6 @@ let score=0
 var scoreboard=document.getElementById("score")
 scoreboard.innerHTML=`Score : ${score}`
 
-
-
 const scene=new THREE.Scene()
 scene.background=new THREE.Color(0x21272e)
 
@@ -18,6 +16,15 @@ renderer.setSize(window.innerWidth,window.innerHeight)
 // const controls = new THREE.OrbitControls(camera, renderer.domElement);
 // controls.target.set(27, 0, 0);
 // controls.listenToKeyEvents(window);
+
+// const toggleButton = document.createElement('button');
+// toggleButton.textContent = 'Toggle Controls';
+// // add event listener to the button
+// toggleButton.addEventListener('click', () => {
+//   controls.enabled = !controls.enabled; // toggle enabled property
+// });
+// //add the button to the DOM
+// document.body.appendChild(toggleButton);
 
 document.body.appendChild(renderer.domElement)
 
@@ -265,21 +272,16 @@ for(i=0;i<4;i++){
 herd6.position.set(52,-2.7,5.5)
 scene.add(herd6)
 
-let car1=car.clone()
-car1.position.set(-10,-2.7,-7.5)
-car1.scale.set(0.05,0.05,0.05)
-car1.rotateZ(4.7)
-// scene.add(car1)
 
+//Truck
+// truck.castShadow = true;
+// truck.receiveShadow = true;
+// truck.position.set(62,-2.5,-3.5)
+// truck.scale.set(0.06,0.06,0.06)
+// truck.rotateX(4.7)
 
-truck.castShadow = true;
-truck.receiveShadow = true;
-truck.position.set(62,-2.5,-3.5)
-truck.scale.set(0.06,0.06,0.06)
-truck.rotateX(4.7)
-
-truck.rotateZ(3.1)
-scene.add(truck) 
+// truck.rotateZ(3.1)
+// scene.add(truck) 
 
 //Floor
 const floorGeometry=new THREE.PlaneGeometry(33,4);
@@ -310,6 +312,17 @@ const floor4=new THREE.Mesh(mediumfloorGeometry,material1)
 scene.add(floor4)
 floor4.position.set(23,-3,-12.5)
 floor4.rotation.x-=Math.PI/2
+
+const plane=new THREE.PlaneGeometry(110,27)
+const roadMaterial = new THREE.MeshStandardMaterial({
+  color: 0x808080, // gray color
+  roughness: 0.5, // slightly rough surface
+  metalness: 0, // no metallic look
+});
+const floor5=new THREE.Mesh(plane,roadMaterial)
+scene.add(floor5)
+floor5.position.set(24.5,-3.1,-0.5) 
+floor5.rotation.x-=Math.PI/2;
 
 
 //Tunnel 
@@ -393,11 +406,11 @@ pole.scale.set(0.5,0.5,0.5)
 // scene.add(pole);
 
 // create a new spotlight object
-// var spotlight = new THREE.SpotLight(0xffffff, 1, 100, Math.PI / 4, 0.5, 2);
+var spotlight = new THREE.SpotLight(0xffffff, 1, 10, Math.PI / 1, 0.5, 2);
 
-// pole.add(spotlight)
-// spotlight.position.x+=0.5
-// spotlight.position.y+=1.8
+pole.add(spotlight)
+spotlight.position.x+=0.5
+spotlight.position.y+=1.8
 
 pole.rotateY(-1.6)
 
@@ -508,6 +521,27 @@ document.addEventListener('keyup', (event) => {
   keyState[event.code] = false;
 });
 
+const gas = document.getElementById("up");
+const reverse = document.getElementById("down");
+
+gas.addEventListener('mousedown', () => {
+  keyState['ArrowUp'] = true;
+});
+
+gas.addEventListener('mouseup', () => {
+  keyState['ArrowUp'] = false;
+});
+
+reverse.addEventListener('mousedown', () => {
+  keyState['ArrowDown'] = true;
+});
+
+reverse.addEventListener('mouseup', () => {
+  keyState['ArrowDown'] = false;
+});
+
+//Control button for Mobile
+
 
 function checkCollision(object1, object2) {
   let box1 = new THREE.Box3().setFromObject(object1);
@@ -543,16 +577,13 @@ function animate(){
 
   requestAnimationFrame(animate)
   
-  // train.position.x+=0.1
-  // if (train.position.x>80){
-  //   train.position.x=0
-  // }
-  // if (checkTouching(carBody,trainbox)) {
-  //   car.position.set(23.25,-2,13)
-  //   }
+  train.position.x+=0.8
+  if (train.position.x>50){
+    train.position.x=-10
+  }
+ 
   herd1.traverse((child) => {
     if (child instanceof THREE.Mesh) {
-      // Do something with the mesh, such as change its material
       if (checkCollision(car,child)) {
         // take appropriate action, such as stopping the game
         console.log("Collision detected!");
@@ -562,7 +593,6 @@ function animate(){
   });
   herd2.traverse((child) => {
     if (child instanceof THREE.Mesh) {
-      // Do something with the mesh, such as change its material
       if (checkCollision(car,child)) {
         // take appropriate action, such as stopping the game
         console.log("Collision detected!");
@@ -573,7 +603,7 @@ function animate(){
   //detect collision for herd2
   herd3.traverse((child) => {
     if (child instanceof THREE.Mesh) {
-      // Do something with the mesh, such as change its material
+      
       if (checkCollision(car,child)) {
         // take appropriate action, such as stopping the game
         console.log("Collision detected!");
@@ -583,7 +613,6 @@ function animate(){
   });
   herd4.traverse((child) => {
     if (child instanceof THREE.Mesh) {
-      // Do something with the mesh, such as change its material
       if (checkCollision(car,child)) {
         // take appropriate action, such as stopping the game
         console.log("Collision detected!");
@@ -593,7 +622,6 @@ function animate(){
   });
   herd5.traverse((child) => {
     if (child instanceof THREE.Mesh) {
-      // Do something with the mesh, such as change its material
       if (checkCollision(car,child)) {
         // take appropriate action, such as stopping the game
         console.log("Collision detected!");
@@ -603,7 +631,6 @@ function animate(){
   });
   herd6.traverse((child) => {
     if (child instanceof THREE.Mesh) {
-      // Do something with the mesh, such as change its material
       if (checkCollision(car,child)) {
         // take appropriate action, such as stopping the game
         console.log("Collision detected!");
@@ -611,35 +638,31 @@ function animate(){
       }
     }
   });
-  if (checkCollision(car,truckTop)){
-    console.log('truck collided!')
+  if (checkCollision(car,train)){
+    console.log('train collided!')
     resetgame()
   }
-  car1.position.x+=0.1
-  if (car1.position.x>80){
-    car1.position.x=-10
-  }
-  herd1.position.x+=0.2
-  if (herd1.position.x>80){
+  herd1.position.x+=0.6
+  if (herd1.position.x>35){
     herd1.position.x=-10
   }
-  herd2.position.x-=0.2
+  herd2.position.x-=0.6
   if (herd2.position.x<-1){
     herd2.position.x=50
   }
-  herd3.position.x+=0.1
+  herd3.position.x+=0.4
   if (herd3.position.x>35){
     herd3.position.x=-1
   }
-  herd4.position.x+=0.1
+  herd4.position.x+=0.4
   if (herd4.position.x>35){
     herd4.position.x=-1
   }
-  herd5.position.x-=0.1
+  herd5.position.x-=0.4
   if (herd5.position.x<-1){
     herd5.position.x=50
   }
-  herd6.position.x-=0.1
+  herd6.position.x-=0.4
   if(herd6.position.x<-1){
     herd6.position.x=62
   }
@@ -653,19 +676,29 @@ function animate(){
   
   //Arrow Controls
   if (keyState['ArrowUp']) {
-    car.position.z -= 0.1;
-    camera.position.z-=0.1
+    car.position.z -= 0.05;
+    camera.position.z-=0.05;
   }
   if (keyState['ArrowDown']) {
-    car.position.z += 0.1;
-    camera.position.z+=0.1
+    car.position.z += 0.05;
+    camera.position.z+=0.05;
   }
-  if (keyState['ArrowLeft']) {
-    car.position.x -= 0.1;
+
+  if (keyState['ArrowUp']) {
+    car.position.z -= 0.05;
+    camera.position.z -= 0.05;
   }
-  if (keyState['ArrowRight']) {
-    car.position.x += 0.1;
+  if (keyState['ArrowDown']) {
+    car.position.z += 0.05;
+    camera.position.z += 0.05;
   }
+
+  // if (keyState['ArrowLeft']) {
+  //   car.position.x -= 0.1;
+  // }
+  // if (keyState['ArrowRight']) {
+  //   car.position.x += 0.1;
+  // }
   renderer.render(scene,camera)
 }
 animate()
